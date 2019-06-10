@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>女子度とエンジニア度を判定しちゃうよ♡{{ if .analyzed }}解析結果{{end}}</title>
+    <!-- Icons-->
+    <link href="vendors/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
+    <link href="vendors/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+    <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="vendors/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <!-- Main styles for this application-->
+    <link href="css/style.css" rel="stylesheet">
+
+    <style type="text/css">/* Chart.js */
+    @-webkit-keyframes chartjs-render-animation {
+      from{opacity:0.99}to{opacity:1}
+    }
+    @keyframes chartjs-render-animation {
+      from{opacity:0.99}to{opacity:1}
+    }
+    .chartjs-render-monitor {
+      -webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;
+    }
+    </style>
+
+
+  </head>
+  <body class="app flex-row align-items-center">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="card-group">
+            <div class="card p-4">
+              <div class="card-body">
+
+              {{ if .analyzed }}
+
+                <div class="row">
+                  <div class="col-sm-12" style="padding-bottom: 20px;">
+                    <h3>解析結果</h3>
+                    <hr class="mt-0">
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="progress-group mb-5">
+                      <div class="progress-group-header">
+                        <i class="icon-user-female progress-group-icon"></i>
+                        <div style="font-size:150%">女子度</div>
+                        <div class="ml-auto font-weight-bold" style="font-size:200%">37%</div>
+                      </div>
+                      <div class="progress-group-bars">
+                        <div class="progress progress-xs">
+                          <div class="progress-bar bg-danger" role="progressbar" style="width: 43%" aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="progress-group mb-5">
+                      <div class="progress-group-header align-items-end">
+                        <i class="icon-social-twitter progress-group-icon"></i>
+                        <div style="font-size:150%">エンジニア度</div>
+                        <div class="ml-auto font-weight-bold" style="font-size:200%">11%</div>
+                      </div>
+                      <div class="progress-group-bars">
+                        <div class="progress progress-xs">
+                          <div class="progress-bar bg-info" role="progressbar" style="width: 11%" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="card">
+                      <div class="card-header">女子っぽさ</div>
+                        <div class="card-body">
+                          <div class="chart-wrapper">
+                            <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                              <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                              </div>
+                              <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                              </div>
+                            </div>
+                          <canvas id="canvas-sex" width="551" height="275" class="chartjs-render-monitor" style="display: block; width: 551px; height: 275px;"></canvas>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="card">
+                      <div class="card-header">エンジニアっぽさ</div>
+                        <div class="card-body">
+                          <div class="chart-wrapper">
+                            <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                              <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                              </div>
+                              <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                              </div>
+                            </div>
+                          <canvas id="canvas-engineer" width="551" height="275" class="chartjs-render-monitor" style="display: block; width: 551px; height: 275px;"></canvas>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              {{end}}
+
+
+                <div class="row">
+                  <div class="col-sm-12" style="padding-top: 40px; padding-bottom: 20px;">
+                    <h3>{{ if .analyzed }}もう一度{{end}}女子エンジニア度を判定してみる♡</h3>
+                    <hr class="mt-0">
+                  </div>
+                </div>
+
+                <div class="row" style="padding-top:20px;">
+                  <div class="col-sm-12">
+                    <form method="POST" action="/">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="name">Twitter</label>
+                            <input class="form-control" id="account" name="account" type="text" placeholder="Twitterアカウント">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="name">文章</label>
+                            <textarea class="form-control" id="tweet" name="tweet" rows="9" placeholder="文章"></textarea>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-group" style="text-align: center;">
+                            <button class="btn btn-primary" type="submit">　送　信　</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  <div>
+                <div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- CoreUI and necessary plugins-->
+    <script src="vendors/jquery/js/jquery.min.js"></script>
+    <script src="vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendors/@coreui/coreui/js/coreui.min.js"></script>
+    <script type="text/javascript" src="vendors/chart.js/js/Chart.min.js" class="view-script"></script>
+    <script type="text/javascript" src="vendors/@coreui/coreui-plugin-chartjs-custom-tooltips/js/custom-tooltips.min.js" class="view-script"></script>
+
+    {{ if .analyzed }}
+    <script>
+    var f_woman = {{ .female_p }};
+    var f_not_w = 1.0 - {{ .female_p }};
+
+    var pieChart = new Chart($('#canvas-sex'), {
+      type: 'pie',
+      data: {
+        labels: [ 'woman' ,'man' ],
+        datasets: [{
+          data: [f_woman, f_not_w],
+          backgroundColor: ['#f86c6b', '#e4e7ea'],
+          hoverBackgroundColor: [ '#f86c6b', '#e4e7ea' ]
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+
+    var f_engineer = {{ .engineer_p}};
+    var f_not_eng  = 1.0 - {{ .engineer_p}};
+
+    var pieChart2 = new Chart($('#canvas-engineer'), {
+      type: 'pie',
+      data: {
+        labels: [ 'engineer' ,'not' ],
+        datasets: [{
+          data: [f_engineer, f_not_eng],
+          backgroundColor: ['#63c2de', '#e4e7ea'],
+          hoverBackgroundColor: [ '#63c2de', '#e4e7ea' ]
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+    </script>
+    {{end}}
+  </body>
+</html>
