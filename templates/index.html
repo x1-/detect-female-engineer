@@ -30,6 +30,21 @@
   </head>
   <body class="app flex-row align-items-center">
     <div class="container">
+
+      <div class="col-md-12">
+      {{with .message}}
+        <div class="alert alert-success" role="alert">{{.}}</div>
+      {{end}}
+
+      {{with .errors}}
+        <div class="alert alert-danger" role="alert">
+        {{range .}}
+          <div>{{.}}</div>
+        {{end}}
+        </div>
+      {{end}}
+      </div>
+
       <div class="row justify-content-center">
         <div class="col-md-12">
           <div class="card-group">
@@ -51,12 +66,12 @@
                     <div class="progress-group mb-5">
                       <div class="progress-group-header">
                         <i class="icon-user-female progress-group-icon"></i>
-                        <div style="font-size:150%">女子度</div>
-                        <div class="ml-auto font-weight-bold" style="font-size:200%">37%</div>
+                        <div style="font-size:150%">女子の確率</div>
+                        <div class="ml-auto font-weight-bold" style="font-size:200%">{{ .female_p }}%</div>
                       </div>
                       <div class="progress-group-bars">
                         <div class="progress progress-xs">
-                          <div class="progress-bar bg-danger" role="progressbar" style="width: 43%" aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar bg-danger" role="progressbar" style="width: {{ .female_p }}%" aria-valuenow="{{ .female_p }}}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                       </div>
                     </div>
@@ -64,7 +79,7 @@
                     <div class="progress-group mb-5">
                       <div class="progress-group-header align-items-end">
                         <i class="icon-social-twitter progress-group-icon"></i>
-                        <div style="font-size:150%">エンジニア度</div>
+                        <div style="font-size:150%">エンジニアの確率</div>
                         <div class="ml-auto font-weight-bold" style="font-size:200%">11%</div>
                       </div>
                       <div class="progress-group-bars">
@@ -131,12 +146,14 @@
 
                 <div class="row" style="padding-top:20px;">
                   <div class="col-sm-12">
+                    <p>Twitter アカウント もしくは 文章を入力してみてください♪</p>
                     <form method="POST" action="/">
                       <div class="row">
                         <div class="col-sm-12">
                           <div class="form-group">
                             <label for="name">Twitter</label>
-                            <input class="form-control" id="account" name="account" type="text" placeholder="Twitterアカウント">
+                            <input class="form-control" id="account" name="account" type="text" placeholder="Twitterアカウント" value="{{with .account}}{{.}}{{end}}">
+                            <span class="help-block">※ 非公開アカウントの場合は判定できません。</span>
                           </div>
                         </div>
                       </div>
@@ -144,7 +161,7 @@
                         <div class="col-sm-12">
                           <div class="form-group">
                             <label for="name">文章</label>
-                            <textarea class="form-control" id="tweet" name="tweet" rows="9" placeholder="文章"></textarea>
+                            <textarea class="form-control" id="tweet" name="tweet" rows="9" placeholder="文章">{{with .tweet}}{{.}}{{end}}</textarea>
                           </div>
                         </div>
                       </div>
@@ -177,8 +194,8 @@
 
     {{ if .analyzed }}
     <script>
-    var f_woman = {{ .female_p }};
-    var f_not_w = 1.0 - {{ .female_p }};
+    var f_woman = {{ .female }};
+    var f_not_w = 1.0 - {{ .female }};
 
     var pieChart = new Chart($('#canvas-sex'), {
       type: 'pie',
@@ -195,8 +212,8 @@
       }
     });
 
-    var f_engineer = {{ .engineer_p}};
-    var f_not_eng  = 1.0 - {{ .engineer_p}};
+    var f_engineer = {{ .engineer}};
+    var f_not_eng  = 1.0 - {{ .engineer}};
 
     var pieChart2 = new Chart($('#canvas-engineer'), {
       type: 'pie',
