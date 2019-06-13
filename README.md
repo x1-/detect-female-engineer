@@ -64,3 +64,4 @@ go run server.go \
 - [ユーザの性別と感情表出傾向との関連](https://www.ai-gakkai.or.jp/jsai2017/webprogram/2017/pdf/42.pdf)
 - [人を表す指示語に対する性別判定](https://www.anlp.jp/proceedings/annual_meeting/2017/pdf_dir/P16-7.pdf)
 - [PyTorch : Tutorial 初級 : NLP のための深層学習 : シーケンスモデルと Long-Short Term Memory ネットワーク](http://torch.classcat.com/2018/05/11/pytorch-tutorial-nlp-sequence-models/)
+- [Python(MeCab) on Dockerで日本語テキスト処理APIをサクッと実装](https://qiita.com/oreyutarover/items/909d614ca3b48d2c9e16)

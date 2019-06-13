@@ -1,0 +1,58 @@
+FROM python:3.7-stretch
+
+USER root
+WORKDIR /tmp
+
+# liviconv-dev --> libc6-dev
+RUN apt-get update \
+    && apt-get install -y mecab \
+    && apt-get install -y libmecab-dev \
+    && apt-get install -y mecab-ipadic-utf8 \
+    && apt-get install -y git \
+    && apt-get install -y make \
+    && apt-get install -y curl \
+    && apt-get install -y wget \
+	&& apt-get install -y less \
+	&& apt-get install -y vim \
+    && apt-get install -y xz-utils \
+    && apt-get install -y file \
+    && apt-get install -y sudo \
+	&& apt-get install -y liblzma5 \
+	&& apt-get install -y liblzma-dev \
+	&& apt-get install -y libc6-dev \
+	&& apt-get install -y software-properties-common
+
+RUN git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git\
+    && cd mecab-ipadic-neologd\
+    && bin/install-mecab-ipadic-neologd -n -y
+
+
+RUN apt-get install -y build-essential
+RUN python3.7 -m pip install pip --upgrade
+
+RUN pip install flask
+RUN pip install numpy
+RUN pip install pandas
+RUN pip install sklearn
+RUN pip install gensim
+RUN pip install mecab-python3
+
+RUN pip install torch torchvision
+RUN pip install neologdn
+RUN pip install msgpack
+RUN pip install distro
+RUN pip install google-cloud-storage google-compute-engine
+
+
+ENV MECAB_SYS /usr/share/mecab/dic/ipadic
+ENV MECAB_DIC /usr/local/lib/mecab/dic
+
+ADD kaomoji.csv /tmp/
+RUN mkdir -p $MECAB_DIC
+RUN /usr/lib/mecab/mecab-dict-index -d $MECAB_SYS -u $MECAB_DIC/kaomoji.dic -f utf-8 -t utf-8 /tmp/kaomoji.csv
+
+
+RUN rm -f /etc/mecabrc
+ADD mecabrc /etc/
+
+RUN rm -rf /tmp/*
