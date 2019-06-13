@@ -22,7 +22,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/volatiletech/sqlboiler/boil"
 
-	"github.com/x1-/detect-engineer-client/models"
+	"github.com/x1-/detect-female-engineer/models"
 )
 
 const (
@@ -47,6 +47,7 @@ var (
 	doc2vecEndpoint   = flag.String("doc2vec_endpoint", "", "An endpoint of doc2vec.")
 	femaleEndpoint    = flag.String("female_endpoint", "", "An endpoint of female predictor.")
 	engineerEndpoint  = flag.String("engineer_endpoint", "", "An endpoint of engineer predictor.")
+	sqlDebug          = flag.Bool("sql_debug", false, "If output the logs of Sqlboiler.")
 )
 
 type Doc2VecRequest struct {
@@ -81,7 +82,7 @@ func main() {
 		panic(err.Error())
 	}
 	boil.SetDB(db)
-	boil.DebugMode = true
+	boil.DebugMode = *sqlDebug
 
 	twClient := getTwitterAPI()
 	var server *gin.Engine

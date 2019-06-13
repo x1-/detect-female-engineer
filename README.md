@@ -42,6 +42,7 @@ ACCESS_TOKEN_SECRET="dummy"
 DOC2VEC_ENDPOINT="http://127.0.0.1:5000/predict"
 FEMALE_ENDPOINT="http://127.0.0.1:5000/predict"
 ENGINEER_ENDPOINT="http://127.0.0.1:5000/predict"
+DEBUG=true
 
 go run server.go \
   -port $PORT \
@@ -54,7 +55,8 @@ go run server.go \
   -access_token_secret $ACCESS_TOKEN_SECRET \
   -doc2vec_endpoint $DOC2VEC_ENDPOINT \
   -female_endpoint $FEMALE_ENDPOINT \
-  -engineer_endpoint $ENGINEER_ENDPOINT
+  -engineer_endpoint $ENGINEER_ENDPOINT \
+  -sql_debug $DEBUG
 ```
 
 # Reference
