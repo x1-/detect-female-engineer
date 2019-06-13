@@ -1,8 +1,8 @@
-# Detect Engineer Client
+# Detect Female Engineer
 
 
 Call API of the Doc2Vec model based on seldon and kubeflow.  
-And, Call API of the LSTM model based on seldon and kubeflow.  
+And, Call API of the LSTM models based on seldon and kubeflow.  
 
 # Prereuists
 
@@ -31,6 +31,7 @@ $ go get github.com/sirupsen/logrus
 # Usage
 
 ```sh
+PORT=8080
 DB_NAME="dummy"
 DB_USER="dummy"
 DB_PASSWD="dummy"
@@ -43,6 +44,7 @@ FEMALE_ENDPOINT="http://127.0.0.1:5000/predict"
 ENGINEER_ENDPOINT="http://127.0.0.1:5000/predict"
 
 go run server.go \
+  -port $PORT \
   -db_name $DB_NAME \
   -db_user $DB_USER \
   -db_passwd $DB_PASSWD \
