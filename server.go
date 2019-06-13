@@ -34,6 +34,7 @@ const (
 )
 
 var (
+	port              = flag.String("port", "8001", "This server receive the port.")
 	consumerKey       = flag.String("consumer_key", "", "Issued from Twitter.")
 	consumerSecret    = flag.String("consumer_secret", "", "Issued from Twitter.")
 	accessToken       = flag.String("access_token", "", "Issued from Twitter.")
@@ -100,7 +101,7 @@ func main() {
 		AnalyzeRouter(ctx, g, twClient)
 	})
 
-	server.Run(":8001")
+	server.Run(":" + *port)
 }
 
 // IndexRouter index ページを表示します.
@@ -123,31 +124,40 @@ func AnalyzeRouter(ctx context.Context, g *gin.Context, api *anaconda.TwitterApi
 		}
 		a.Tweet = tweet
 	} else {
-		a.Tweet = fmt.Sprintf("%s%s", convNewline(a.Tweet, ","), Delimiter)
+		a.Tweet = convNewline(a.Tweet, ",")
 	}
 
 	var err error
 	var doc2vec *Doc2Vec
 	var female *LSTM
+	var engineer *LSTM
 
 	if len(errors) == 0 {
 		doc2vec, err = postDoc2vec(*doc2vecEndpoint, a.Tweet, "")
 		if err != nil {
 			errors = append(errors, ErrorGeneral)
 		}
-		log.Infof("res: %v", doc2vec)
+		log.Debugf("res: %v", doc2vec)
 	}
 	if len(errors) == 0 {
-		female, err = postFemalePredictor(*femaleEndpoint, doc2vec)
+		female, err = postLSTMPredictor(*femaleEndpoint, doc2vec)
 		if err != nil {
 			errors = append(errors, ErrorGeneral)
 		}
-		log.Infof("res: %v", female)
+		log.Debugf("res: %v", female)
+	}
+	if len(errors) == 0 {
+		engineer, err = postLSTMPredictor(*engineerEndpoint, doc2vec)
+		if err != nil {
+			errors = append(errors, ErrorGeneral)
+		}
+		log.Debugf("res: %v", engineer)
 	}
 
 	fProbe, fPredict := alignProbe(female)
+	eProbe, ePredict := alignProbe(engineer)
 
-	err = addAccess(ctx, a, fPredict, fProbe, .0, .0)
+	err = addAccess(ctx, a, fPredict, fProbe, ePredict, eProbe)
 	if err != nil {
 		errors = append(errors, ErrorGeneral)
 	}
@@ -169,13 +179,14 @@ func AnalyzeRouter(ctx context.Context, g *gin.Context, api *anaconda.TwitterApi
 	}
 
 	fProbe = probeByTrue(fPredict, fProbe)
+	eProbe = probeByTrue(ePredict, eProbe)
 
 	g.HTML(http.StatusOK, Index, gin.H{
 		"analyzed":   true,
 		"female":     fProbe,
 		"female_p":   Round(fProbe*100.0, 2),
-		"engineer":   0.12356,
-		"engineer_p": 12.356,
+		"engineer":   eProbe,
+		"engineer_p": Round(eProbe*100.0, 2),
 	})
 }
 
@@ -225,6 +236,37 @@ func postFemalePredictor(endpoint string, data *Doc2Vec) (*LSTM, error) {
 	body, err := request(endpoint, string(j))
 	if err != nil {
 		log.Error("an error occured at postFemalePredictor.")
+		return nil, err
+	}
+
+	var lstm *LSTM
+	err = json.Unmarshal(body, &lstm)
+	if err != nil {
+		log.Errorf("json.Unmarshal: %v", err)
+		return nil, err
+	}
+	return lstm, nil
+}
+
+// postLSTMPredictor Doc2Vecモデル から返ってきた文章のベクトル表現からクラスを推定します.
+func postLSTMPredictor(endpoint string, data *Doc2Vec) (*LSTM, error) {
+
+	d := data.Data
+	d.Tensor.Shape = []int{1, 600}
+
+	req := LSTMRequest{
+		Data: d,
+	}
+	j, err := json.Marshal(req)
+	if err != nil {
+		log.Errorf("json.Marshal: %v", err)
+		return nil, err
+	}
+	log.Debugf("json: %s", string(j))
+
+	body, err := request(endpoint, string(j))
+	if err != nil {
+		log.Error("an error occured at postLSTMPredictor.")
 		return nil, err
 	}
 
@@ -351,7 +393,7 @@ func getUserTimeline(api *anaconda.TwitterApi, scname string, count int) []anaco
 }
 func getTextFromAccount(api *anaconda.TwitterApi, scname string) string {
 	ss := make([]string, 0, 5)
-	tweets := getUserTimeline(api, scname, 100)
+	tweets := getUserTimeline(api, scname, 70)
 	rep := regexp.MustCompile(`https?://[\w/:%#\$&\?\(\)~\.=\+\-]+`)
 
 	for _, t := range tweets {

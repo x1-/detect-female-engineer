@@ -80,11 +80,11 @@
                       <div class="progress-group-header align-items-end">
                         <i class="icon-social-twitter progress-group-icon"></i>
                         <div style="font-size:150%">エンジニアの確率</div>
-                        <div class="ml-auto font-weight-bold" style="font-size:200%">11%</div>
+                        <div class="ml-auto font-weight-bold" style="font-size:200%">{{ .engineer_p }}%</div>
                       </div>
                       <div class="progress-group-bars">
                         <div class="progress progress-xs">
-                          <div class="progress-bar bg-info" role="progressbar" style="width: 11%" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar bg-info" role="progressbar" style="width: {{ .engineer_p }}%" aria-valuenow="{{ .engineer_p }}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                       </div>
                     </div>
@@ -209,7 +209,7 @@
     var pieChart = new Chart($('#canvas-sex'), {
       type: 'pie',
       data: {
-        labels: [ 'woman' ,'man' ],
+        labels: [ 'woman' ,'not' ],
         datasets: [{
           data: [f_woman, f_not_w],
           backgroundColor: ['#f86c6b', '#e4e7ea'],
@@ -221,8 +221,8 @@
       }
     });
 
-    var f_engineer = {{ .engineer}};
-    var f_not_eng  = 1.0 - {{ .engineer}};
+    var f_engineer = {{ .engineer }};
+    var f_not_eng  = 1.0 - {{ .engineer }};
 
     var pieChart2 = new Chart($('#canvas-engineer'), {
       type: 'pie',
