@@ -4,6 +4,10 @@
 Call API of the Doc2Vec model based on seldon and kubeflow.  
 And, Call API of the LSTM models based on seldon and kubeflow.  
 
+# Architecture
+
+![img](./doc/img/architecture.png)
+
 # Prereuists
 
 You should use go command installing dependencies.
