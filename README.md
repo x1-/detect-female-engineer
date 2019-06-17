@@ -8,6 +8,11 @@ And, Call API of the LSTM models based on seldon and kubeflow.
 
 ![img](./doc/img/architecture.png)
 
+## Slideshare
+
+- [リアルタイムにデータ分析してWebサービスの面白さを伝えたい](https://www.slideshare.net/x1ichi/web-150180078/x1ichi/web-150180078)
+
+
 # Prereuists
 
 You should use go command installing dependencies.
